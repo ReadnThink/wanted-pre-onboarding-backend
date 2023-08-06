@@ -22,8 +22,7 @@ import java.util.stream.IntStream;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -185,5 +184,21 @@ class PostControllerTest {
                 .andDo(print())
         ;
         verify(postService).edit(any(), any());
+    }
+
+    @Test
+    @DisplayName("글 삭제 성공")
+    void 글_삭제() throws Exception {
+        //when
+        mockMvc.perform(delete("/posts/{postId}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(1))
+                .andExpect(jsonPath("$.message").value("글 삭제를 성공했습니다."))
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andDo(print())
+        ;
+        verify(postService).delete(any());
     }
 }
