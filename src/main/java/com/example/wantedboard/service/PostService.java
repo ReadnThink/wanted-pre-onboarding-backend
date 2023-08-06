@@ -4,8 +4,12 @@ import com.example.wantedboard.aop.CustomApiException;
 import com.example.wantedboard.domain.Post;
 import com.example.wantedboard.postrepository.PostRepository;
 import com.example.wantedboard.request.PostCreate;
+import com.example.wantedboard.request.PostSearch;
 import com.example.wantedboard.response.PostResponse;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -30,5 +34,11 @@ public class PostService {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .build();
+    }
+
+    public List<PostResponse> getList(PostSearch postSearch) {
+        return postRepository.getList(postSearch).stream()
+                .map(PostResponse::new)
+                .collect(Collectors.toList());
     }
 }

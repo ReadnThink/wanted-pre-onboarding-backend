@@ -14,6 +14,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -53,7 +57,6 @@ class PostControllerTest {
                 .andDo(print())
         ;
     }
-
     @Test
     @DisplayName("/posts 요청시 title 필수")
     void 작성실패1() throws Exception {
@@ -130,5 +133,34 @@ class PostControllerTest {
                 .andDo(print())
         ;
         verify(postService).get(1L);
+    }
+
+    @Test
+    @DisplayName("글 여러개 조회 성공")
+    void 글_여러개조회성공() throws Exception {
+        //given
+        List<PostResponse> requestPosts = IntStream.range(1, 11)
+                .mapToObj(i -> {
+                    return PostResponse.builder()
+                            .title("Title " + i)
+                            .content("Content " + i)
+                            .build();
+                })
+                .collect(Collectors.toList());
+        //stub
+        given(postService.getList(any())).willReturn(requestPosts);
+
+        //when
+        mockMvc.perform(get("/posts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(1))
+                .andExpect(jsonPath("$.message").value("글 리스트 조회를 성공했습니다."))
+                .andExpect(jsonPath("$.data").isArray())
+                .andExpect(jsonPath("$.data.size()").value(10))
+                .andDo(print())
+        ;
+        verify(postService).getList(any());
     }
 }
