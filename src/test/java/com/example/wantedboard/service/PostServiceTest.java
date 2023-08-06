@@ -3,6 +3,7 @@ package com.example.wantedboard.service;
 import com.example.wantedboard.domain.Post;
 import com.example.wantedboard.postrepository.PostRepository;
 import com.example.wantedboard.request.PostCreate;
+import com.example.wantedboard.request.PostSearch;
 import com.example.wantedboard.response.PostResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -70,5 +74,28 @@ class PostServiceTest {
         assertThat(postOneResponse).isNotNull();
         assertThat(postOneResponse.getContent()).isEqualTo(oneResponse.getContent());
         assertThat(postOneResponse.getTitle()).isEqualTo(oneResponse.getTitle());
+    }
+
+    @Test
+    @DisplayName("글 1페이지 조회")
+    void test_list() {
+        //given
+        List<Post> response = IntStream.range(1, 6)
+                .mapToObj(i -> {
+                    return Post.builder()
+                            .title("Title " + i)
+                            .content("Content " + i)
+                            .build();
+                })
+                .collect(Collectors.toList());
+        // stub
+        given(postRepository.getList(any())).willReturn(response);
+
+        //when
+        PostSearch postSearch = new PostSearch();
+        final List<PostResponse> list = postService.getList(postSearch);
+
+        //then
+        assertThat(list.size()).isEqualTo(5);
     }
 }
