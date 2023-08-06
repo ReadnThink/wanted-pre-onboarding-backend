@@ -25,4 +25,3 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), e.getErrorMap()), HttpStatus.BAD_REQUEST);
     }
 }
-

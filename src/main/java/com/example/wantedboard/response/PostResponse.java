@@ -4,12 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class PostResponseDto {
+public class PostResponse {
     private final String title;
     private final String content;
 
     @Builder
-    public PostResponseDto(final String title, final String content) {
+    public PostResponse(final String title, final String content) {
         this.title = title;
         this.content = content;
     }
