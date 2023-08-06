@@ -2,6 +2,7 @@ package com.example.wantedboard.controller;
 
 import com.example.wantedboard.aop.CustomApiException;
 import com.example.wantedboard.request.PostCreate;
+import com.example.wantedboard.request.PostEdit;
 import com.example.wantedboard.response.PostResponse;
 import com.example.wantedboard.service.PostService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -162,5 +163,27 @@ class PostControllerTest {
                 .andDo(print())
         ;
         verify(postService).getList(any());
+    }
+
+    @Test
+    @DisplayName("글 수정 성공")
+    void 글_수정() throws Exception {
+        //given
+        final PostEdit request = PostEdit.builder()
+                .title("수정")
+                .content("수정")
+                .build();
+        //when
+        mockMvc.perform(post("/posts/{postId}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(request))
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(1))
+                .andExpect(jsonPath("$.message").value("글 수정을 성공했습니다."))
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andDo(print())
+        ;
+        verify(postService).edit(any(), any());
     }
 }
