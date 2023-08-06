@@ -1,6 +1,7 @@
 package com.example.wantedboard.controller;
 
 import com.example.wantedboard.request.PostCreate;
+import com.example.wantedboard.request.PostEdit;
 import com.example.wantedboard.request.PostSearch;
 import com.example.wantedboard.response.PostResponse;
 import com.example.wantedboard.response.ResponseDto;
@@ -40,5 +41,11 @@ public class PostController {
     public ResponseEntity<?> getList(@ModelAttribute PostSearch postSearch) {
         final List<PostResponse> postList = postService.getList(postSearch);
         return new ResponseEntity<>(new ResponseDto<>(1, "글 리스트 조회를 성공했습니다.", postList), HttpStatus.OK);
+    }
+
+    @PostMapping("/posts/{postId}")
+    public ResponseEntity<?> edit(@PathVariable Long postId, @RequestBody PostEdit postEdit) {
+        postService.edit(postId, postEdit);
+        return new ResponseEntity<>(new ResponseDto<>(1, "글 수정을 성공했습니다.", null), OK);
     }
 }

@@ -27,4 +27,9 @@ public class Post {
         this.title = title;
     }
 
+    public void change(String title, String content) {
+        this.title = title != null ? title : this.title;
+        this.content = content != null ? content : this.content;
+    }
+
 }

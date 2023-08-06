@@ -98,4 +98,22 @@ class PostServiceTest {
         //then
         assertThat(list.size()).isEqualTo(5);
     }
+
+    @Test
+    @DisplayName("글 수정 성공")
+    void test_edit() {
+        //given
+        final Post post = Post.builder()
+                .id(1L)
+                .title("Title")
+                .content("Content")
+                .build();
+
+        //when
+        post.change("제목수정","내용수정");
+
+        //then
+        assertThat(post.getTitle()).isEqualTo("제목수정");
+        assertThat(post.getContent()).isEqualTo("내용수정");
+    }
 }
