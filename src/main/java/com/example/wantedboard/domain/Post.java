@@ -1,9 +1,6 @@
 package com.example.wantedboard.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,16 +17,19 @@ public class Post {
     private String content;
     private String title;
 
+    @ManyToOne
+    private User user;
+
     @Builder
-    public Post(final Long id, final String content, final String title) {
+    public Post(final Long id, final String content, final String title, User user) {
         this.id = id;
         this.content = content;
         this.title = title;
+        this.user = user;
     }
 
     public void change(String title, String content) {
         this.title = title != null ? title : this.title;
         this.content = content != null ? content : this.content;
     }
-
 }
