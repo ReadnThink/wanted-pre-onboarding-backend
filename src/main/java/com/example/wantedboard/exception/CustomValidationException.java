@@ -1,4 +1,4 @@
-package com.example.wantedboard.aop;
+package com.example.wantedboard.exception;
 
 import lombok.Builder;
 import lombok.Getter;
