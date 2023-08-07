@@ -1,6 +1,6 @@
 package com.example.wantedboard.controller;
 
-import com.example.wantedboard.request.JoinDto;
+import com.example.wantedboard.request.JoinCreate;
 import com.example.wantedboard.response.ResponseDto;
 import com.example.wantedboard.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +22,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/join")
-    public ResponseEntity<ResponseDto<Object>> join(@RequestBody @Valid JoinDto joinDto, BindingResult bindingResult) {
-        var message = userService.join(joinDto);
+    public ResponseEntity<ResponseDto<Object>> join(@RequestBody @Valid JoinCreate joinCreate, BindingResult bindingResult) {
+        var message = userService.join(joinCreate);
 
         return new ResponseEntity<>( ResponseDto.builder()
                 .code(SUCCESS.getValue())

@@ -1,7 +1,6 @@
 package com.example.wantedboard.controller;
 
-import com.example.wantedboard.request.JoinDto;
-import com.example.wantedboard.service.PostService;
+import com.example.wantedboard.request.JoinCreate;
 import com.example.wantedboard.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -40,7 +38,7 @@ class UserControllerTest {
         //given
         String password = "12345678";
 
-        var joinDto = JoinDto.builder()
+        var joinDto = JoinCreate.builder()
                 .email("wanted@wanted.com")
                 .password(password)
                 .build();
@@ -65,7 +63,7 @@ class UserControllerTest {
         //given
         String password = "12345";
 
-        var joinDto = JoinDto.builder()
+        var joinDto = JoinCreate.builder()
                 .email("wanted@wanted.com")
                 .password(password)
                 .build();
@@ -90,7 +88,7 @@ class UserControllerTest {
         //given
         String password = "12345678";
 
-        var joinDto = JoinDto.builder()
+        var joinDto = JoinCreate.builder()
                 .email("wantedwanted.com")
                 .password(password)
                 .build();
@@ -105,7 +103,7 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.message").value("유효성검사 실패"))
-                .andExpect(jsonPath("$.data.email").value("must be a well-formed email address"))
+                .andExpect(jsonPath("$.data.email").value("이메일 조건: @ 포함"))
                 .andDo(print());
     }
 

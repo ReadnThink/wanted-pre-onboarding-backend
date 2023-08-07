@@ -4,7 +4,7 @@ import com.example.wantedboard.domain.User;
 import com.example.wantedboard.domain.UserRole;
 import com.example.wantedboard.exception.AlreadyExistsEmail;
 import com.example.wantedboard.postrepository.UserRepository;
-import com.example.wantedboard.request.JoinDto;
+import com.example.wantedboard.request.JoinCreate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +42,7 @@ class UserServiceTest {
         String password = "1234";
         final String encodedPassword = passwordEncoder.encode(password);
 
-        var joinDto = JoinDto.builder()
+        var joinDto = JoinCreate.builder()
                 .email("wanted@wanted.com")
                 .password(password)
                 .build();
@@ -70,7 +70,7 @@ class UserServiceTest {
         String password = "1234";
         final String encodedPassword = passwordEncoder.encode(password);
 
-        var joinDto = JoinDto.builder()
+        var joinDto = JoinCreate.builder()
                 .email("wanted@wanted.com")
                 .password(password)
                 .build();
