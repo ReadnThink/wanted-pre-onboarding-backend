@@ -1,7 +1,8 @@
 package com.example.wantedboard.service;
 
-import com.example.wantedboard.aop.CustomApiException;
+import com.example.wantedboard.exception.CustomApiException;
 import com.example.wantedboard.domain.Post;
+import com.example.wantedboard.exception.PostNotFound;
 import com.example.wantedboard.postrepository.PostRepository;
 import com.example.wantedboard.request.PostCreate;
 import com.example.wantedboard.request.PostEdit;
@@ -28,9 +29,8 @@ public class PostService {
     }
 
     public PostResponse get(final Long postId) {
-        final Post post = postRepository.findById(postId).orElseThrow(
-                () -> new CustomApiException("존재하지 않는 글입니다.")
-        );
+        final Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFound::new);
 
         return PostResponse.builder()
                 .title(post.getTitle())
@@ -47,14 +47,14 @@ public class PostService {
     @Transactional
     public void edit(Long id, PostEdit postEdit) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new CustomApiException("존재하지 않는 글입니다."));
+                .orElseThrow(PostNotFound::new);
 
         post.change(postEdit.getTitle(), postEdit.getContent());
     }
 
     public void delete(final Long postId) {
         final Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomApiException("존재하지 않는 글입니다."));
+                .orElseThrow(PostNotFound::new);
 
         postRepository.delete(post);
     }

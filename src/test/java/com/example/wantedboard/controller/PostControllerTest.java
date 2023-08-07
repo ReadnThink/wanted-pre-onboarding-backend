@@ -1,6 +1,7 @@
 package com.example.wantedboard.controller;
 
-import com.example.wantedboard.aop.CustomApiException;
+import com.example.wantedboard.exception.CustomApiException;
+import com.example.wantedboard.exception.PostNotFound;
 import com.example.wantedboard.request.PostCreate;
 import com.example.wantedboard.request.PostEdit;
 import com.example.wantedboard.response.PostResponse;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -22,6 +24,7 @@ import java.util.stream.IntStream;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -51,7 +54,7 @@ class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsBytes(postCreate))
                 )
-                .andExpect(jsonPath("$.code").value(1))
+                .andExpect(jsonPath("$.code").value("200"))
                 .andExpect(jsonPath("$.message").value("글 작성을 성공했습니다."))
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -68,7 +71,7 @@ class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsBytes(postCreate))
                 )
-                .andExpect(jsonPath("$.code").value(-1))
+                .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.message").value("유효성검사 실패"))
                 .andExpect(jsonPath("$.data.title").value("타이틀을 입력해주세요"))
                 .andExpect(status().isBadRequest())
@@ -88,7 +91,7 @@ class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsBytes(postCreate))
                 )
-                .andExpect(jsonPath("$.code").value(-1))
+                .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.message").value("유효성검사 실패"))
                 .andExpect(jsonPath("$.data.title").value("내용은 30글자 이내로 입력 가능합니다."))
                 .andExpect(status().isBadRequest())
@@ -105,7 +108,7 @@ class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(1))
+                .andExpect(jsonPath("$.code").value("200"))
                 .andExpect(jsonPath("$.message").value("글 조회에 성공했습니다."))
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andDo(print())
@@ -119,16 +122,16 @@ class PostControllerTest {
         Long postId = 1L;
 
         //given
-        final CustomApiException customApiException = new CustomApiException("게시글이 존재하지 않습니다");
+        final CustomApiException customApiException = new PostNotFound();
         given(postService.get(postId)).willThrow(customApiException);
 
         //when
         mockMvc.perform(get("/posts/{postId}", postId)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(-1))
-                .andExpect(jsonPath("$.message").value("게시글이 존재하지 않습니다"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("404"))
+                .andExpect(jsonPath("$.message").value("존재하지 않는 글입니다."))
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andDo(print())
         ;
@@ -155,7 +158,7 @@ class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(1))
+                .andExpect(jsonPath("$.code").value("200"))
                 .andExpect(jsonPath("$.message").value("글 리스트 조회를 성공했습니다."))
                 .andExpect(jsonPath("$.data").isArray())
                 .andExpect(jsonPath("$.data.size()").value(10))
@@ -178,7 +181,7 @@ class PostControllerTest {
                         .content(om.writeValueAsString(request))
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(1))
+                .andExpect(jsonPath("$.code").value("200"))
                 .andExpect(jsonPath("$.message").value("글 수정을 성공했습니다."))
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andDo(print())
@@ -194,7 +197,7 @@ class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(1))
+                .andExpect(jsonPath("$.code").value("200"))
                 .andExpect(jsonPath("$.message").value("글 삭제를 성공했습니다."))
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andDo(print())

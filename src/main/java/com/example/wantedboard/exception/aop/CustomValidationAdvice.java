@@ -1,5 +1,6 @@
-package com.example.wantedboard.aop;
+package com.example.wantedboard.exception.aop;
 
+import com.example.wantedboard.exception.CustomValidationException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
