@@ -1,5 +1,6 @@
 package com.example.wantedboard.controller;
 
+import com.example.wantedboard.config.auth.LoginUser;
 import com.example.wantedboard.request.PostCreate;
 import com.example.wantedboard.request.PostEdit;
 import com.example.wantedboard.request.PostSearch;
@@ -10,10 +11,13 @@ import com.example.wantedboard.util.StatusCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 import static com.example.wantedboard.util.StatusCode.*;
@@ -26,9 +30,9 @@ public class PostController {
 
     private final PostService postService;
 
-    @PostMapping("/posts")
-    public ResponseEntity<?> post(@RequestBody @Valid PostCreate postCreate, BindingResult bindingResult) {
-        postService.write(postCreate);
+    @PostMapping("/user/posts")
+    public ResponseEntity<?> post(@RequestBody @Valid PostCreate postCreate, BindingResult bindingResult, @AuthenticationPrincipal LoginUser loginUser) {
+        postService.write(postCreate, loginUser.getUser().getEmail());
 
         return new ResponseEntity<>(ResponseDto.builder()
                 .code(SUCCESS.getValue())
@@ -64,7 +68,7 @@ public class PostController {
         );
     }
 
-    @PostMapping("/posts/{postId}")
+    @PostMapping("/user/posts/{postId}")
     public ResponseEntity<?> edit(@PathVariable Long postId, @RequestBody PostEdit postEdit) {
         postService.edit(postId, postEdit);
 
@@ -77,7 +81,7 @@ public class PostController {
         );
     }
 
-    @DeleteMapping("/posts/{postId}")
+    @DeleteMapping("/user/posts/{postId}")
     public ResponseEntity<?> delete(@PathVariable Long postId) {
         postService.delete(postId);
 

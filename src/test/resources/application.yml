@@ -6,13 +6,8 @@ spring:
 
 
   datasource:
-    url: jdbc:h2:mem:sns
+    url: jdbc:h2:mem:sns;NON_KEYWORDS=USER
     username: sa
     password:
     driver-class-name: org.h2.Driver
 
-  data:
-    web:
-      pageable:
-        one-indexed-parameters: true
-        default-page-size: 5

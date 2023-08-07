@@ -1,21 +1,27 @@
 package com.example.wantedboard.controller;
 
+import com.example.wantedboard.domain.User;
+import com.example.wantedboard.domain.UserRole;
 import com.example.wantedboard.exception.CustomApiException;
 import com.example.wantedboard.exception.PostNotFound;
+import com.example.wantedboard.postrepository.UserRepository;
 import com.example.wantedboard.request.PostCreate;
 import com.example.wantedboard.request.PostEdit;
 import com.example.wantedboard.response.PostResponse;
 import com.example.wantedboard.service.PostService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,12 +30,12 @@ import java.util.stream.IntStream;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.http.HttpStatus.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 class PostControllerTest {
@@ -41,18 +47,35 @@ class PostControllerTest {
     @MockBean
     PostService postService;
 
+    @Autowired
+    UserRepository userRepository;
+
+
+    @BeforeEach
+    public void setUp(){
+        saveMockUser();
+    }
+
     @Test
     @DisplayName("글 작성 성공")
+    @WithUserDetails(value = "wanted@wanted.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void 작성성공1() throws Exception {
         // when
-        PostCreate postCreate = PostCreate.builder().title("제목").content("내용").build();
-        PostResponse postResponse = PostResponse.builder().title("제목").content("내용").build();
+        var postCreate = PostCreate.builder()
+                .title("제목")
+                .content("내용")
+                .build();
 
-        given(postService.write(any())).willReturn(postResponse);
+        var postResponse = PostResponse.builder()
+                .title("제목")
+                .content("내용")
+                .build();
+
+        given(postService.write(any(),any())).willReturn(postResponse);
 
         mockMvc.perform(post("/posts")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(om.writeValueAsBytes(postCreate))
+                        .content(om.writeValueAsString(postCreate))
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("200"))
@@ -60,10 +83,12 @@ class PostControllerTest {
                 .andDo(print())
         ;
     }
+
     @Test
     @DisplayName("글 작성 title 빈 문자열 가능")
+    @WithUserDetails(value = "wanted@wanted.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void 작성성공2() throws Exception {
-        PostCreate postCreate = PostCreate.builder()
+        var postCreate = PostCreate.builder()
                 .title("")
                 .content("내용")
                 .build();
@@ -77,11 +102,11 @@ class PostControllerTest {
                 .andDo(print())
         ;
     }
-
     @Test
     @DisplayName("글 작성 글의 제목은 제한 없음")
+    @WithUserDetails(value = "wanted@wanted.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void 작성성공3() throws Exception {
-        PostCreate postCreate = PostCreate.builder()
+        var postCreate = PostCreate.builder()
                 .title("제목 글자수 제한이 없습니다.제목 글자수 제한이 없습니다.제목 글자수 제한이 없습니다.제목 글자수 제한이 없습니다.제목 글자수 제한이 없습니다.제목 글자수 제한이 없습니다.")
                 .content("내용")
                 .build();
@@ -167,9 +192,10 @@ class PostControllerTest {
 
     @Test
     @DisplayName("글 수정 성공")
+    @WithUserDetails(value = "wanted@wanted.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void 글_수정() throws Exception {
         //given
-        final PostEdit request = PostEdit.builder()
+        var request = PostEdit.builder()
                 .title("수정")
                 .content("수정")
                 .build();
@@ -189,6 +215,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("글 삭제 성공")
+    @WithUserDetails(value = "wanted@wanted.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void 글_삭제() throws Exception {
         //when
         mockMvc.perform(delete("/posts/{postId}", 1L)
@@ -201,5 +228,14 @@ class PostControllerTest {
                 .andDo(print())
         ;
         verify(postService).delete(any());
+    }
+
+    private void saveMockUser() {
+        User user = User.builder()
+                .email("wanted@wanted.com")
+                .userRole(UserRole.USER)
+                .password("12341234")
+                .build();
+        userRepository.save(user);
     }
 }
