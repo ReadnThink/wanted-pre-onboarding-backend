@@ -1,6 +1,6 @@
 package com.example.wantedboard.config;
 
-import com.example.wantedboard.domain.UserEnum;
+import com.example.wantedboard.domain.UserRole;
 import com.example.wantedboard.util.CustomResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -61,7 +61,7 @@ public class SecurityConfig {
 
         http.authorizeRequests()
                 .antMatchers("/user/**").authenticated()
-                .antMatchers("/admin/**").hasRole("" + UserEnum.ADMIN)
+                .antMatchers("/admin/**").hasRole("" + UserRole.ADMIN)
                 .anyRequest().permitAll();
 
         return http.build();
