@@ -1,6 +1,9 @@
 package com.example.wantedboard.exception;
 
+import com.example.wantedboard.util.StatusCode;
 import org.springframework.http.HttpStatus;
+
+import static com.example.wantedboard.util.StatusCode.*;
 
 public class PostNotFound extends CustomApiException{
 
@@ -12,7 +15,7 @@ public class PostNotFound extends CustomApiException{
 
     @Override
     public String statusCode() {
-        return "404";
+        return NOT_FOUND.getValue();
     }
 
     @Override

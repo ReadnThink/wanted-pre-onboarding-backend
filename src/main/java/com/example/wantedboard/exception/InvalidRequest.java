@@ -2,6 +2,8 @@ package com.example.wantedboard.exception;
 
 import org.springframework.http.HttpStatus;
 
+import static com.example.wantedboard.util.StatusCode.*;
+
 public class InvalidRequest extends CustomApiException{
 
     private static final String MESSAGE = "잘못된 요청입니다.";
@@ -12,7 +14,7 @@ public class InvalidRequest extends CustomApiException{
 
     @Override
     public String statusCode() {
-        return "400";
+        return BAD_REQUEST.getValue();
     }
 
     @Override
