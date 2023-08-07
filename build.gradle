@@ -43,6 +43,9 @@ dependencies {
 
     // sql
     runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // jwt
+    implementation group: 'com.auth0', name: 'java-jwt', version: '4.2.1'
 }
 
 tasks.named('test') {
