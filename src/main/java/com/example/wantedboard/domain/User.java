@@ -23,15 +23,18 @@ public class User{
 
     private String password;
 
+    private UserRole userRole;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Post> posts;
 
     @Builder
-    public User(final Long id, final String name, final String email, final String password) {
+    public User(final Long id, final String name, final String email, final String password, final UserRole userRole) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+        this.userRole = userRole;
     }
 
 }
