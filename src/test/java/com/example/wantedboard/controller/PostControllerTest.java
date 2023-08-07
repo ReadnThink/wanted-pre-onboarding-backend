@@ -42,7 +42,7 @@ class PostControllerTest {
     PostService postService;
 
     @Test
-    @DisplayName("/posts 작성 성공")
+    @DisplayName("글 작성 성공")
     void 작성성공1() throws Exception {
         // when
         PostCreate postCreate = PostCreate.builder().title("제목").content("내용").build();
@@ -54,15 +54,15 @@ class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsBytes(postCreate))
                 )
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("200"))
                 .andExpect(jsonPath("$.message").value("글 작성을 성공했습니다."))
-                .andExpect(status().isOk())
                 .andDo(print())
         ;
     }
     @Test
-    @DisplayName("/posts 요청시 title 필수")
-    void 작성실패1() throws Exception {
+    @DisplayName("글 작성 title 빈 문자열 가능")
+    void 작성성공2() throws Exception {
         PostCreate postCreate = PostCreate.builder()
                 .title("")
                 .content("내용")
@@ -71,19 +71,18 @@ class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsBytes(postCreate))
                 )
-                .andExpect(jsonPath("$.code").value("400"))
-                .andExpect(jsonPath("$.message").value("유효성검사 실패"))
-                .andExpect(jsonPath("$.data.title").value("타이틀을 입력해주세요"))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.message").value("글 작성을 성공했습니다."))
                 .andDo(print())
         ;
     }
 
     @Test
-    @DisplayName("/posts 요청시 글의 제목은 30자 이내여야 함")
-    void 작성실패2() throws Exception {
+    @DisplayName("글 작성 글의 제목은 제한 없음")
+    void 작성성공3() throws Exception {
         PostCreate postCreate = PostCreate.builder()
-                .title("내용은 30글자 이내로 입력 가능합니다.내용은 30글자 이내로 입력 가능합니다.내용은 30글자 이내로 입력 가능합니다.내용은 30글자 이내로 입력 가능합니다.")
+                .title("제목 글자수 제한이 없습니다.제목 글자수 제한이 없습니다.제목 글자수 제한이 없습니다.제목 글자수 제한이 없습니다.제목 글자수 제한이 없습니다.제목 글자수 제한이 없습니다.")
                 .content("내용")
                 .build();
 
@@ -91,10 +90,9 @@ class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsBytes(postCreate))
                 )
-                .andExpect(jsonPath("$.code").value("400"))
-                .andExpect(jsonPath("$.message").value("유효성검사 실패"))
-                .andExpect(jsonPath("$.data.title").value("내용은 30글자 이내로 입력 가능합니다."))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.message").value("글 작성을 성공했습니다."))
                 .andDo(print())
         ;
     }
