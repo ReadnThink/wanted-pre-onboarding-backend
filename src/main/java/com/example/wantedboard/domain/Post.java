@@ -18,6 +18,7 @@ public class Post {
     private String title;
 
     @ManyToOne
+    @JoinColumn
     private User user;
 
     @Builder
@@ -31,5 +32,9 @@ public class Post {
     public void change(String title, String content) {
         this.title = title != null ? title : this.title;
         this.content = content != null ? content : this.content;
+    }
+
+    public void addUser(final User user) {
+        this.user = user;
     }
 }

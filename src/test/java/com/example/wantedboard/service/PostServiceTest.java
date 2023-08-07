@@ -1,16 +1,21 @@
 package com.example.wantedboard.service;
 
 import com.example.wantedboard.domain.Post;
+import com.example.wantedboard.domain.User;
+import com.example.wantedboard.exception.UserNotFound;
 import com.example.wantedboard.postrepository.PostRepository;
+import com.example.wantedboard.postrepository.UserRepository;
 import com.example.wantedboard.request.PostCreate;
 import com.example.wantedboard.request.PostSearch;
 import com.example.wantedboard.response.PostResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +23,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -30,36 +37,81 @@ class PostServiceTest {
     @Mock
     PostRepository postRepository;
 
-    @Test
-    @DisplayName("글 작성 성공")
-    void test1() {
+    @Mock
+    UserRepository userRepository;
 
-        final Post post = Post.builder()
+    User user;
+    Post post;
+    PostCreate postCreate;
+    String email;
+
+    @BeforeEach
+    void setUp() {
+        post = Post.builder()
                 .id(1L)
                 .title("제목")
                 .content("내용")
                 .build();
+
+        user = User.builder()
+                .id(1L)
+                .email("wanted@wanted.com")
+                .password("12341234")
+                .build();
+
+        postCreate = PostCreate.builder()
+                .title("제목")
+                .content("내용")
+                .build();
+
+        email = "wanted@watned.com";
+    }
+
+    @Test
+    @DisplayName("글 작성 성공")
+    void test1() {
+
         given(postRepository.save(any())).willReturn(post);
+        given(userRepository.findByEmail(any())).willReturn(Optional.ofNullable(user));
 
         final PostResponse responseDto = postService.write(PostCreate.builder()
                 .title("제목")
                 .content("내용")
-                .build());
+                .build(), "wanted@watned.com");
 
         assertThat(responseDto.getTitle()).isEqualTo("제목");
         assertThat(responseDto.getContent()).isEqualTo("내용");
     }
 
     @Test
+    @DisplayName("글 작성 실패")
+    void tes_실패1() {
+
+
+
+        given(postRepository.save(any())).willReturn(post);
+        given(userRepository.findByEmail(any())).willThrow(new UserNotFound());
+
+        //when
+        UserNotFound exception = assertThrows(UserNotFound.class, () -> postService.write(postCreate,email));
+
+        //then
+        assertEquals(exception.HttpStatusCode(), HttpStatus.NOT_FOUND);
+        assertEquals(exception.getMessage(), "존재하지 않는 이메일 입니다.");
+
+    }
+
+    @Test
     @DisplayName("글 1개 조회")
     void test() {
         //given
-        final Post response = Post.builder()
+        var response = Post.builder()
                 .id(1L)
                 .title("Title")
                 .content("Content")
                 .build();
-        final PostResponse oneResponse = PostResponse.builder()
+
+        var oneResponse = PostResponse.builder()
                 .title("Title")
                 .content("Content")
                 .build();
@@ -102,12 +154,6 @@ class PostServiceTest {
     @Test
     @DisplayName("글 수정 성공")
     void test_edit() {
-        //given
-        final Post post = Post.builder()
-                .id(1L)
-                .title("Title")
-                .content("Content")
-                .build();
 
         //when
         post.change("제목수정","내용수정");

@@ -1,13 +1,16 @@
 package com.example.wantedboard.service;
 
-import com.example.wantedboard.exception.CustomApiException;
 import com.example.wantedboard.domain.Post;
+import com.example.wantedboard.domain.User;
 import com.example.wantedboard.exception.PostNotFound;
+import com.example.wantedboard.exception.UserNotFound;
 import com.example.wantedboard.postrepository.PostRepository;
+import com.example.wantedboard.postrepository.UserRepository;
 import com.example.wantedboard.request.PostCreate;
 import com.example.wantedboard.request.PostEdit;
 import com.example.wantedboard.request.PostSearch;
 import com.example.wantedboard.response.PostResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,17 +18,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    public PostService(final PostRepository postRepository) {
-        this.postRepository = postRepository;
-    }
+    // todo PostId 반환하기
+    @Transactional
+    public PostResponse write(PostCreate postCreate, final String userEmail) {
+        var post = postRepository.save(postCreate.toEntity());
 
-    public PostResponse write(PostCreate postCreate) {
-        final Post post = postRepository.save(postCreate.toEntity());
-        return new PostResponse(post.getTitle(), post.getContent());
+        var user = userRepository.findByEmail(userEmail)
+                .orElseThrow(UserNotFound::new);
+
+        post.addUser(user);
+
+        return PostResponse.builder()
+                .title(post.getTitle())
+                .content(post.getContent())
+                .build();
     }
 
     public PostResponse get(final Long postId) {
