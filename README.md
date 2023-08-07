@@ -1,5 +1,7 @@
 ﻿# wanted-pre-onboarding-backend
 
+# 8월 11일까지 완료하겠습니다.
+
 ## 과제 주소
 원티드 : https://www.wanted.co.kr/events/pre_ob_be_6 <br/>
 깃허브 : https://github.com/lordmyshepherd-edu/wanted-pre-onboardung-backend-selection-assignment
