@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static com.example.wantedboard.config.PostUrl.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -73,7 +74,7 @@ class PostControllerTest {
 
         given(postService.write(any(),any())).willReturn(postResponse);
 
-        mockMvc.perform(post("/posts")
+        mockMvc.perform(post(POST_CREATE.getValue())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsString(postCreate))
                 )
@@ -92,7 +93,7 @@ class PostControllerTest {
                 .title("")
                 .content("내용")
                 .build();
-        mockMvc.perform(post("/posts")
+        mockMvc.perform(post(POST_CREATE.getValue())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsBytes(postCreate))
                 )
@@ -111,7 +112,7 @@ class PostControllerTest {
                 .content("내용")
                 .build();
 
-        mockMvc.perform(post("/posts")
+        mockMvc.perform(post(POST_CREATE.getValue())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsBytes(postCreate))
                 )
@@ -127,7 +128,7 @@ class PostControllerTest {
     void 조회성공1() throws Exception {
         Long postId = 1L;
         //when
-        mockMvc.perform(get("/posts/{postId}", postId)
+        mockMvc.perform(get(POST_GET.getValue(), postId)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
@@ -149,7 +150,7 @@ class PostControllerTest {
         given(postService.get(postId)).willThrow(customApiException);
 
         //when
-        mockMvc.perform(get("/posts/{postId}", postId)
+        mockMvc.perform(get(POST_GET.getValue(), postId)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isNotFound())
@@ -177,7 +178,7 @@ class PostControllerTest {
         given(postService.getList(any())).willReturn(requestPosts);
 
         //when
-        mockMvc.perform(get("/posts")
+        mockMvc.perform(get(POST_LIST.getValue())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
@@ -200,7 +201,7 @@ class PostControllerTest {
                 .content("수정")
                 .build();
         //when
-        mockMvc.perform(post("/posts/{postId}", 1L)
+        mockMvc.perform(post(POST_EDIT.getValue(), 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsString(request))
                 )
@@ -210,7 +211,7 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andDo(print())
         ;
-        verify(postService).edit(any(), any());
+        verify(postService).edit(any(), any(), any());
     }
 
     @Test
@@ -218,7 +219,7 @@ class PostControllerTest {
     @WithUserDetails(value = "wanted@wanted.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void 글_삭제() throws Exception {
         //when
-        mockMvc.perform(delete("/posts/{postId}", 1L)
+        mockMvc.perform(delete(POST_DELETE.getValue(), 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())

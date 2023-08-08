@@ -1,6 +1,8 @@
 package com.example.wantedboard.domain;
 
 import javax.persistence.*;
+
+import com.example.wantedboard.exception.UserNotMatch;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,7 +31,11 @@ public class Post {
         this.user = user;
     }
 
-    public void change(String title, String content) {
+    public void change(String title, String content, Long userId) {
+        if (this.user.getId() != userId) {
+            throw new UserNotMatch();
+        }
+
         this.title = title != null ? title : this.title;
         this.content = content != null ? content : this.content;
     }

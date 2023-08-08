@@ -25,10 +25,10 @@ public class PostService {
     private final UserRepository userRepository;
 
     @Transactional
-    public PostResponse write(PostCreate postCreate, final String userEmail) {
+    public PostResponse write(PostCreate postCreate, final Long userId) {
         var post = postRepository.save(postCreate.toEntity());
 
-        var user = userRepository.findByEmail(userEmail)
+        var user = userRepository.findById(userId)
                 .orElseThrow(UserNotFound::new);
 
         post.addUser(user);
@@ -40,7 +40,7 @@ public class PostService {
     }
 
     public PostResponse get(final Long postId) {
-        final Post post = postRepository.findById(postId)
+        var post = postRepository.findById(postId)
                 .orElseThrow(PostNotFound::new);
 
         return PostResponse.builder()
@@ -57,15 +57,18 @@ public class PostService {
     }
 
     @Transactional
-    public void edit(Long id, PostEdit postEdit) {
-        Post post = postRepository.findById(id)
+    public void edit(Long id, PostEdit postEdit, Long userId) {
+        var post = postRepository.findById(id)
                 .orElseThrow(PostNotFound::new);
 
-        post.change(postEdit.getTitle(), postEdit.getContent());
+        var user = userRepository.findById(userId)
+                .orElseThrow(UserNotFound::new);
+
+        post.change(postEdit.getTitle(), postEdit.getContent(), userId);
     }
 
     public void delete(final Long postId) {
-        final Post post = postRepository.findById(postId)
+        var post = postRepository.findById(postId)
                 .orElseThrow(PostNotFound::new);
 
         postRepository.delete(post);
