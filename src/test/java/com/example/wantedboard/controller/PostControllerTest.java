@@ -228,7 +228,7 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andDo(print())
         ;
-        verify(postService).delete(any());
+        verify(postService).delete(any(), any());
     }
 
     private void saveMockUser() {
