@@ -45,17 +45,4 @@ public class CustomResponseUtil {
         }
     }
 
-    public static void unAuthorization(HttpServletResponse response, String msg) {
-        try {
-            ObjectMapper om = new ObjectMapper();
-            ResponseDto<?> responseDto = new ResponseDto<>(SUCCESS.getValue(), msg, null);
-            String responseBody = om.writeValueAsString(responseDto);
-            response.setCharacterEncoding(UTF_8.name());
-            response.setContentType(APPLICATION_JSON_VALUE);
-            response.setStatus(FORBIDDEN.value());
-            response.getWriter().println(responseBody);
-        } catch (Exception e) {
-            log.error("서버 파싱 에러");
-        }
-    }
 }

@@ -7,21 +7,18 @@ import com.example.wantedboard.request.PostSearch;
 import com.example.wantedboard.response.PostResponse;
 import com.example.wantedboard.response.ResponseDto;
 import com.example.wantedboard.service.PostService;
-import com.example.wantedboard.util.StatusCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 
-import static com.example.wantedboard.util.StatusCode.*;
-import static org.springframework.http.HttpStatus.*;
+import static com.example.wantedboard.util.StatusCode.SUCCESS;
+import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
 @RestController
@@ -32,7 +29,7 @@ public class PostController {
 
     @PostMapping("/user/posts")
     public ResponseEntity<?> post(@RequestBody @Valid PostCreate postCreate, BindingResult bindingResult, @AuthenticationPrincipal LoginUser loginUser) {
-        postService.write(postCreate, loginUser.getUser().getEmail());
+        postService.write(postCreate, loginUser.getUser().getId());
 
         return new ResponseEntity<>(ResponseDto.builder()
                 .code(SUCCESS.getValue())
@@ -69,8 +66,8 @@ public class PostController {
     }
 
     @PostMapping("/user/posts/{postId}")
-    public ResponseEntity<?> edit(@PathVariable Long postId, @RequestBody PostEdit postEdit) {
-        postService.edit(postId, postEdit);
+    public ResponseEntity<?> edit(@PathVariable Long postId, @RequestBody PostEdit postEdit, @AuthenticationPrincipal LoginUser loginUser) {
+        postService.edit(postId, postEdit, loginUser.getUser().getId());
 
         return new ResponseEntity<>(ResponseDto.builder()
                 .code(SUCCESS.getValue())

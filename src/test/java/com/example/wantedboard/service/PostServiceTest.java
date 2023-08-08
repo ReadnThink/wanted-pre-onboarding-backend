@@ -3,6 +3,7 @@ package com.example.wantedboard.service;
 import com.example.wantedboard.domain.Post;
 import com.example.wantedboard.domain.User;
 import com.example.wantedboard.exception.UserNotFound;
+import com.example.wantedboard.exception.UserNotMatch;
 import com.example.wantedboard.postrepository.PostRepository;
 import com.example.wantedboard.postrepository.UserRepository;
 import com.example.wantedboard.request.PostCreate;
@@ -43,20 +44,20 @@ class PostServiceTest {
     User user;
     Post post;
     PostCreate postCreate;
-    String email;
 
     @BeforeEach
     void setUp() {
-        post = Post.builder()
-                .id(1L)
-                .title("제목")
-                .content("내용")
-                .build();
-
         user = User.builder()
                 .id(1L)
                 .email("wanted@wanted.com")
                 .password("12341234")
+                .build();
+
+        post = Post.builder()
+                .user(user)
+                .id(1L)
+                .title("제목")
+                .content("내용")
                 .build();
 
         postCreate = PostCreate.builder()
@@ -64,7 +65,6 @@ class PostServiceTest {
                 .content("내용")
                 .build();
 
-        email = "wanted@watned.com";
     }
 
     @Test
@@ -72,12 +72,12 @@ class PostServiceTest {
     void test1() {
 
         given(postRepository.save(any())).willReturn(post);
-        given(userRepository.findByEmail(any())).willReturn(Optional.ofNullable(user));
+        given(userRepository.findById(any())).willReturn(Optional.ofNullable(user));
 
         final PostResponse responseDto = postService.write(PostCreate.builder()
                 .title("제목")
                 .content("내용")
-                .build(), "wanted@watned.com");
+                .build(), 1L);
 
         assertThat(responseDto.getTitle()).isEqualTo("제목");
         assertThat(responseDto.getContent()).isEqualTo("내용");
@@ -90,10 +90,10 @@ class PostServiceTest {
 
 
         given(postRepository.save(any())).willReturn(post);
-        given(userRepository.findByEmail(any())).willThrow(new UserNotFound());
+        given(userRepository.findById(any())).willThrow(new UserNotFound());
 
         //when
-        UserNotFound exception = assertThrows(UserNotFound.class, () -> postService.write(postCreate,email));
+        UserNotFound exception = assertThrows(UserNotFound.class, () -> postService.write(postCreate,1L));
 
         //then
         assertEquals(exception.HttpStatusCode(), HttpStatus.NOT_FOUND);
@@ -156,10 +156,23 @@ class PostServiceTest {
     void test_edit() {
 
         //when
-        post.change("제목수정","내용수정");
+        post.change("제목수정","내용수정", 1L);
 
         //then
         assertThat(post.getTitle()).isEqualTo("제목수정");
         assertThat(post.getContent()).isEqualTo("내용수정");
     }
+
+    @Test
+    @DisplayName("글 수정 실패")
+    void test_edit1() {
+
+        //when
+        final UserNotMatch exception = assertThrows(UserNotMatch.class, () -> post.change("제목수정", "내용수정", 2L));
+
+        //then
+        assertEquals(exception.HttpStatusCode(), HttpStatus.FORBIDDEN);
+        assertEquals(exception.getMessage(), "게시글을 수정할 수 있는 사용자는 게시글 작성자만이어야 합니다.");
+    }
+
 }
