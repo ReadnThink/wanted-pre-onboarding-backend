@@ -24,7 +24,6 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-    // todo PostId 반환하기
     @Transactional
     public PostResponse write(PostCreate postCreate, final String userEmail) {
         var post = postRepository.save(postCreate.toEntity());
@@ -45,6 +44,7 @@ public class PostService {
                 .orElseThrow(PostNotFound::new);
 
         return PostResponse.builder()
+                .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .build();
