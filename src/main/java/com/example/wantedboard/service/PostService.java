@@ -67,9 +67,14 @@ public class PostService {
         post.change(postEdit.getTitle(), postEdit.getContent(), userId);
     }
 
-    public void delete(final Long postId) {
+    public void delete(final Long postId, Long userId) {
         var post = postRepository.findById(postId)
                 .orElseThrow(PostNotFound::new);
+
+        var user = userRepository.findById(userId)
+                .orElseThrow(UserNotFound::new);
+
+        post.isSameUser(user.getId());
 
         postRepository.delete(post);
     }

@@ -32,9 +32,7 @@ public class Post {
     }
 
     public void change(String title, String content, Long userId) {
-        if (this.user.getId() != userId) {
-            throw new UserNotMatch();
-        }
+        isSameUser(userId);
 
         this.title = title != null ? title : this.title;
         this.content = content != null ? content : this.content;
@@ -42,5 +40,11 @@ public class Post {
 
     public void addUser(final User user) {
         this.user = user;
+    }
+
+    public void isSameUser(final Long userId) {
+        if (this.user.getId() != userId) {
+            throw new UserNotMatch();
+        }
     }
 }

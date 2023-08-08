@@ -1,6 +1,8 @@
-package com.example.wantedboard.config.jwt;
+package com.example.wantedboard.config;
 
 import com.example.wantedboard.config.auth.LoginUser;
+import com.example.wantedboard.config.jwt.JwtProcess;
+import com.example.wantedboard.config.jwt.JwtVO;
 import com.example.wantedboard.domain.User;
 import com.example.wantedboard.domain.UserRole;
 import org.junit.jupiter.api.DisplayName;

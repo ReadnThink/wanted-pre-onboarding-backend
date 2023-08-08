@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.example.wantedboard.config.UserUrl.USER_URL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -46,7 +47,7 @@ class UserControllerTest {
         given(userService.join(any())).willReturn("회원가입을 성공했습니다.");
 
         //when
-        mockMvc.perform(post("/join")
+        mockMvc.perform(post(USER_URL.getValue())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsString(joinDto))
                 )
@@ -71,7 +72,7 @@ class UserControllerTest {
         given(userService.join(any())).willReturn("회원가입을 성공했습니다.");
 
         //when
-        mockMvc.perform(post("/join")
+        mockMvc.perform(post(USER_URL.getValue())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsString(joinDto))
                 )
@@ -96,7 +97,7 @@ class UserControllerTest {
         given(userService.join(any())).willReturn("회원가입을 성공했습니다.");
 
         //when
-        mockMvc.perform(post("/join")
+        mockMvc.perform(post(USER_URL.getValue())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsString(joinDto))
                 )
