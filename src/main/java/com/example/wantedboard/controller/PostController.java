@@ -56,7 +56,7 @@ public class PostController {
             name = "postId",
             value = "글 인덱스 번호",
             required = true,
-            dataType = "int"
+            dataType = "Long"
     )
     @GetMapping("/posts/{postId}")
     public ResponseEntity<?> get(@PathVariable Long postId) {
@@ -96,7 +96,7 @@ public class PostController {
             name = "postId",
             value = "글 인덱스 번호",
             required = true,
-            dataType = "int"
+            dataType = "Long"
     )
     @PostMapping("/user/posts/{postId}")
     public ResponseEntity<?> edit(@PathVariable Long postId, @RequestBody PostEdit postEdit, @AuthenticationPrincipal @ApiIgnore LoginUser loginUser) {
@@ -119,7 +119,7 @@ public class PostController {
             name = "postId",
             value = "글 인덱스 번호",
             required = true,
-            dataType = "int"
+            dataType = "Long" //
     )
     @DeleteMapping("/user/posts/{postId}")
     public ResponseEntity<?> delete(@PathVariable Long postId, @AuthenticationPrincipal @ApiIgnore LoginUser loginUser) {
