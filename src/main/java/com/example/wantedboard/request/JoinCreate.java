@@ -10,10 +10,8 @@ import javax.validation.constraints.Size;
 @Builder
 public class JoinCreate {
 
-    @Email(message = "이메일 조건: @ 포함")
     private final String email;
 
-    @Size(min = 8, message = "비밀번호 조건: 8자 이상")
     private final String password;
 
 }

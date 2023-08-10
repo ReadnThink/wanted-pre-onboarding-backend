@@ -1,7 +1,5 @@
 package com.example.wantedboard.service;
 
-import com.example.wantedboard.domain.Post;
-import com.example.wantedboard.domain.User;
 import com.example.wantedboard.exception.PostNotFound;
 import com.example.wantedboard.exception.UserNotFound;
 import com.example.wantedboard.postrepository.PostRepository;
@@ -26,10 +24,9 @@ public class PostService {
 
     @Transactional
     public PostResponse write(PostCreate postCreate, final Long userId) {
-        var post = postRepository.save(postCreate.toEntity());
-
         var user = userRepository.findById(userId)
-                .orElseThrow(UserNotFound::new);
+                .orElseThrow(UserNotFound::new);;
+        var post = postRepository.save(postCreate.toEntity());
 
         post.addUser(user);
 
@@ -61,9 +58,7 @@ public class PostService {
         var post = postRepository.findById(id)
                 .orElseThrow(PostNotFound::new);
 
-        var user = userRepository.findById(userId)
-                .orElseThrow(UserNotFound::new);
-
+        validateUserExists(userId);
         post.change(postEdit.getTitle(), postEdit.getContent(), userId);
     }
 
@@ -71,11 +66,14 @@ public class PostService {
         var post = postRepository.findById(postId)
                 .orElseThrow(PostNotFound::new);
 
-        var user = userRepository.findById(userId)
-                .orElseThrow(UserNotFound::new);
-
-        post.isSameUser(user.getId());
+        validateUserExists(userId);
+        post.isSameUser(userId);
 
         postRepository.delete(post);
+    }
+
+    private void validateUserExists(final Long userId) {
+        userRepository.findById(userId)
+                .orElseThrow(UserNotFound::new);
     }
 }

@@ -1,5 +1,7 @@
 package com.example.wantedboard.controller;
 
+import com.example.wantedboard.exception.InvalidEmail;
+import com.example.wantedboard.exception.InvalidPassword;
 import com.example.wantedboard.request.JoinCreate;
 import com.example.wantedboard.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -69,7 +71,7 @@ class UserControllerTest {
                 .password(password)
                 .build();
 
-        given(userService.join(any())).willReturn("회원가입을 성공했습니다.");
+        given(userService.join(any())).willThrow(new InvalidPassword());
 
         //when
         mockMvc.perform(post(USER_URL.getValue())
@@ -78,8 +80,7 @@ class UserControllerTest {
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
-                .andExpect(jsonPath("$.message").value("유효성검사 실패"))
-                .andExpect(jsonPath("$.data.password").value("비밀번호 조건: 8자 이상"))
+                .andExpect(jsonPath("$.message").value("비밀번호 조건: 8자 이상이어야 합니다."))
                 .andDo(print());
     }
 
@@ -94,7 +95,7 @@ class UserControllerTest {
                 .password(password)
                 .build();
 
-        given(userService.join(any())).willReturn("회원가입을 성공했습니다.");
+        given(userService.join(any())).willThrow(new InvalidEmail());
 
         //when
         mockMvc.perform(post(USER_URL.getValue())
@@ -103,8 +104,7 @@ class UserControllerTest {
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
-                .andExpect(jsonPath("$.message").value("유효성검사 실패"))
-                .andExpect(jsonPath("$.data.email").value("이메일 조건: @ 포함"))
+                .andExpect(jsonPath("$.message").value("이메일 조건: '@'가 포함되어야 합니다."))
                 .andDo(print());
     }
 

@@ -2,6 +2,7 @@ package com.example.wantedboard.service;
 
 import com.example.wantedboard.domain.Post;
 import com.example.wantedboard.domain.User;
+import com.example.wantedboard.exception.PostNotFound;
 import com.example.wantedboard.exception.UserNotFound;
 import com.example.wantedboard.exception.UserNotMatch;
 import com.example.wantedboard.postrepository.PostRepository;
@@ -88,9 +89,6 @@ class PostServiceTest {
     @DisplayName("글 작성 실패")
     void tes_실패1() {
 
-
-
-        given(postRepository.save(any())).willReturn(post);
         given(userRepository.findById(any())).willThrow(new UserNotFound());
 
         //when
@@ -99,7 +97,6 @@ class PostServiceTest {
         //then
         assertEquals(exception.HttpStatusCode(), HttpStatus.NOT_FOUND);
         assertEquals(exception.getMessage(), "존재하지 않는 이메일 입니다.");
-
     }
 
     @Test
@@ -127,6 +124,32 @@ class PostServiceTest {
         assertThat(postOneResponse).isNotNull();
         assertThat(postOneResponse.getContent()).isEqualTo(oneResponse.getContent());
         assertThat(postOneResponse.getTitle()).isEqualTo(oneResponse.getTitle());
+    }
+
+    @Test
+    @DisplayName("글 1개 조회 - 실패")
+    void test3() {
+        //given
+        var response = Post.builder()
+                .id(1L)
+                .title("Title")
+                .content("Content")
+                .build();
+
+        var oneResponse = PostResponse.builder()
+                .title("Title")
+                .content("Content")
+                .build();
+
+        // stub
+        given(postRepository.findById(any())).willThrow(new PostNotFound());
+
+        //when
+        var exception = assertThrows(PostNotFound.class, () -> postService.get(2L));
+
+        //then
+        assertEquals(exception.HttpStatusCode(), HttpStatus.NOT_FOUND);
+        assertEquals(exception.getMessage(), "존재하지 않는 글입니다.");
     }
 
     @Test
@@ -167,19 +190,17 @@ class PostServiceTest {
     @Test
     @DisplayName("글 수정 실패")
     void test_edit1() {
-
         //when
         var exception = assertThrows(UserNotMatch.class, () -> post.change("제목수정", "내용수정", 2L));
 
         //then
         assertEquals(exception.HttpStatusCode(), HttpStatus.FORBIDDEN);
-        assertEquals(exception.getMessage(), "게시글을 수정/삭제 할 수 있는 사용자는 게시글 작성자만이어야 합니다.");
+        assertEquals(exception.getMessage(), "게시글을 수정/삭제는 게시글 작성자만 가능합니다.");
     }
 
     @Test
     @DisplayName("글 삭제 성공")
     void test_delete() {
-
         /**
          * 서비스의 다른 로직은 JpaRepository 로직이므로 테스트 할 필요가 없다고 판단
          * 예외가 터지지 않으면 테스트는 성공
@@ -187,7 +208,6 @@ class PostServiceTest {
 
         //when
         post.isSameUser(1L);
-
     }
 
     @Test
@@ -204,6 +224,6 @@ class PostServiceTest {
 
         //then
         assertEquals(exception.HttpStatusCode(), HttpStatus.FORBIDDEN);
-        assertEquals(exception.getMessage(), "게시글을 수정/삭제 할 수 있는 사용자는 게시글 작성자만이어야 합니다.");
+        assertEquals(exception.getMessage(), "게시글을 수정/삭제는 게시글 작성자만 가능합니다.");
     }
 }
