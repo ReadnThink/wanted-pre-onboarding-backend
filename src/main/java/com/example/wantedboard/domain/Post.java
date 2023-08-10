@@ -43,7 +43,7 @@ public class Post {
     }
 
     public void isSameUser(final Long userId) {
-        if (this.user.getId() != userId) {
+        if (this.user == null || this.user.getId() != userId ) {
             throw new UserNotMatch();
         }
     }
