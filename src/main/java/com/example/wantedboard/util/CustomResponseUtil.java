@@ -17,7 +17,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
 public class CustomResponseUtil {
-
     public static void success(HttpServletResponse response, Object dto) {
         try {
             ObjectMapper om = new ObjectMapper();

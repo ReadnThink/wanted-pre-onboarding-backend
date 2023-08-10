@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -43,7 +45,7 @@ public class Post {
     }
 
     public void isSameUser(final Long userId) {
-        if (this.user.getId() != userId) {
+        if (this.user == null || this.user.getId() != userId ) {
             throw new UserNotMatch();
         }
     }

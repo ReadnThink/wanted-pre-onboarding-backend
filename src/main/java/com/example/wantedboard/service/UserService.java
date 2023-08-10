@@ -17,23 +17,25 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public String join(JoinCreate joinCreate) {
-
-        userRepository.findByEmail(joinCreate.getEmail()).ifPresent(
-                user -> {
-                    throw new AlreadyExistsEmail();
-                });
-
-        var encodedPassword = passwordEncoder.encode(joinCreate.getPassword());
-
+        validateEmailExist(joinCreate);
         var user = User.builder()
                 .email(joinCreate.getEmail())
-                .password(encodedPassword)
+                .password(joinCreate.getPassword())
                 .userRole(UserRole.USER)
                 .build();
+
+        user.validateJoinCreate();
+        user.encodePassword(passwordEncoder);
 
         userRepository.save(user);
 
         return "회원가입을 성공하였습니다.";
+    }
+
+    private void validateEmailExist(final JoinCreate joinCreate) {
+        userRepository.findByEmail(joinCreate.getEmail()).ifPresent(user -> {
+                    throw new AlreadyExistsEmail();
+                });
     }
 
 }

@@ -1,10 +1,14 @@
 package com.example.wantedboard.domain;
 
 import javax.persistence.*;
+
+import com.example.wantedboard.exception.InvalidEmail;
+import com.example.wantedboard.exception.InvalidPassword;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -34,5 +38,25 @@ public class User{
         this.userRole = userRole;
     }
 
+    public void validateJoinCreate(){
+        validateEmail();
+        validatePassword();
+    }
+
+    private void validateEmail() {
+        if (!this.email.contains("@")) {
+            throw new InvalidEmail();
+        }
+    }
+
+    private void validatePassword() {
+        if (this.password.length() < 8) {
+            throw new InvalidPassword();
+        }
+    }
+
+    public void encodePassword(final PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(this.password);
+    }
 }
 

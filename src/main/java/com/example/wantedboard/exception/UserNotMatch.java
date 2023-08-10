@@ -7,7 +7,7 @@ import static com.example.wantedboard.util.StatusCode.NOT_FOUND;
 
 public class UserNotMatch extends CustomApiException{
 
-    private static final String MESSAGE = "게시글을 수정/삭제 할 수 있는 사용자는 게시글 작성자만이어야 합니다.";
+    private static final String MESSAGE = "게시글을 수정/삭제는 게시글 작성자만 가능합니다.";
 
     public UserNotMatch() {
         super(MESSAGE);
