@@ -26,8 +26,108 @@
 
 ## 구현한 API의 동작을 촬영한 데모 영상 링크
 
+<details>
+<summary>회원가입 </summary>
+<div markdown="1">
 
-추가 예정
+### 성공
+
+https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/929dab4c-43a7-4434-8e35-98c0af1af2c1
+
+### 실패
+
+https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/f0acf9e3-b2c5-45bb-89cb-f5d4cd1543a4
+
+https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/a121bfc6-074f-4e3a-9cc1-b12d4e8c6866
+
+</div>
+</details>
+
+<details>
+<summary>로그인 </summary>
+<div markdown="1">
+
+### 성공
+
+https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/221c03f4-c882-4230-86b8-b68d62b7ad5b
+
+### 실패
+
+https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/ecd2875d-d7c0-4f0e-a336-498181005bef
+
+</div>
+</details>
+
+<details>
+<summary>게시글 리스트 조회 </summary>
+<div markdown="1">
+  
+### 성공
+  
+https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/a2352005-37dc-41fa-b3de-852505aca01f
+
+</div>
+</details>
+<details>
+<summary>게시글 한건 조회 </summary>
+<div markdown="1">
+  
+### 성공
+  
+https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/dcc02796-d32a-4f9b-9549-66e70583e7de
+
+### 실패
+
+https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/ce237e69-c334-411a-8b40-537b3e238455
+
+</div>
+</details>
+<details>
+<summary>게시글 작성 </summary>
+<div markdown="1">
+  
+### 성공
+  
+https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/e717753b-9f99-4e0d-946a-44b7e9ce8eaf
+
+### 실패
+
+https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/b53b3246-b434-4be7-9bf2-4b3c354352d6
+
+</div>
+</details>
+<details>
+<summary>게시글 수정 </summary>
+<div markdown="1">
+  
+### 성공
+  
+https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/159e8864-2eee-4c9e-a1ac-f40fa4d641d1
+
+### 실패
+
+https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/53ff0fb8-87fe-40ab-a0e6-56a441be7a83
+
+https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/0b8ed51b-39fe-40a9-8a42-dae0d9a3a988
+
+</div>
+</details>
+<details>
+<summary>게시글 삭제 </summary>
+<div markdown="1">
+  
+### 성공
+  
+https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/85426801-f8cb-4be9-9ada-b5e9443b2c18
+
+### 실패
+
+https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/0046615d-2e61-48a2-8e76-bc3b0af9fe11
+
+https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/7e613fe0-0682-4881-ab55-729bbe1efe8d
+
+</div>
+</details>
 
 ## 구현 방법 및 이유에 대한 간략한 설명
 
