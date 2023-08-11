@@ -31,8 +31,11 @@
 Java · Spring Boot · Spring Data JPA · Querydsl · MySQL · Spring Security · Docker · AWS EC2 · Gradle
 
 ## 테스트
+
 **컨트롤러** : @SpringBootTest<br/>
 **서비스** : @ExtendWith
+
+![img_1.png](img_1.png)
 
 테스트코드를 작성하여 아래와같은 장점을 얻었습니다.
 
