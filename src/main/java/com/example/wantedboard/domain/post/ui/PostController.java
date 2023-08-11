@@ -98,7 +98,7 @@ public class PostController {
             required = true,
             dataType = "Long"
     )
-    @PatchMapping("/user/posts/{postId}") // todo patch 바꾸기
+    @PatchMapping("/user/posts/{postId}")
     public ResponseEntity<?> edit(@PathVariable Long postId, @RequestBody PostEdit postEdit, @AuthenticationPrincipal @ApiIgnore LoginUser loginUser) {
         postService.edit(postId, postEdit, loginUser.getUser().getId());
 
