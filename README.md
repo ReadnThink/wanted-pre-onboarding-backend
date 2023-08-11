@@ -6,12 +6,39 @@
 원티드 : https://www.wanted.co.kr/events/pre_ob_be_6 <br/>
 깃허브 : https://github.com/lordmyshepherd-edu/wanted-pre-onboardung-backend-selection-assignment
 
+
+
 ## 목차
-1. [지원자 성명](#지원자-성명)
-2. [애플리케이션의 실행 방법](#애플리케이션의-실행-방법)
-3. [구현한 API의 동작을 촬영한 데모 영상 링크](#구현한-api의-동작을-촬영한-데모-영상-링크)
-4. [구현 방법 및 이유에 대한 간략한 설명](#구현-방법-및-이유에-대한-간략한-설명)
-5. [API 명세](#api-명세)
+1. [AWS배포](#aws-배포)
+2. [테스트 작성](#테스트)
+3. [지원자 성명](#지원자-성명)
+4. [애플리케이션의 실행 방법](#애플리케이션의-실행-방법)
+5. [구현한 API의 동작을 촬영한 데모 영상 링크](#구현한-api의-동작을-촬영한-데모-영상-링크)
+6. [구현 방법 및 이유에 대한 간략한 설명](#구현-방법-및-이유에-대한-간략한-설명)
+7. [API 명세](#api-명세)
+
+
+
+## AWS 배포
+
+[AWS EC2 배포 주소](http://15.165.44.35:8082/posts)
+[Swagger 주소](http://15.165.44.35:8082/swagger-ui/index.html#/)
+
+![image](https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/e268b306-fce3-409b-a046-828a0d1050e5)
+
+### 개발환경
+
+Java · Spring Boot · Spring Data JPA · Querydsl · MySQL · Spring Security · Docker · AWS EC2 · Gradle
+
+## 테스트
+**컨트롤러** : @SpringBootTest<br/>
+**서비스** : @ExtendWith
+
+테스트코드를 작성하여 아래와같은 장점을 얻었습니다.
+
+1. 코드가 변경되어도 예상치 못한 부작용을 방지
+2. 작성한 코드가 의도한 대로 작동하는지 검증하여 실제 애플리케이션을 띄우지 않고 코드 검증
+3. 배포시 버그를 최소화
 
 
 ## 지원자 성명
@@ -19,6 +46,20 @@
 
 ## 애플리케이션의 실행 방법
 
+1. git clone [김솔배-원티드-과제](https://github.com/ReadnThink/wanted-pre-onboarding-backend.git)
+2. application.yml 파일에 환경변수 입력
+  3. mysql의 URL, USERNAME, PASSWORD
+  4. jwt.secret에 jwt 생성을 위한 키값 입력
+5. yml에 입력한 mysql에 스키마를 추가
+6. Java IDE를 사용해 애플리케이션을 실행합니다.
+
+### 엔드포인트 호출
+
+위 설명대로 진행되었다는 가정하에 시작합니다.
+
+1. 애플리케이션을 실행합니다.
+2. API를 테스트 할 수 있는 플랫폼을 이용해 API를 호출합니다.
+3. API 명세는 [WIKI페이지](https://github.com/ReadnThink/wanted-pre-onboarding-backend/wiki/API-%EB%AA%85%EC%84%B8(request-response-%ED%8F%AC%ED%95%A8))를 참고해 주세요.
 
 
 ## 데이터베이스 테이블 구조
