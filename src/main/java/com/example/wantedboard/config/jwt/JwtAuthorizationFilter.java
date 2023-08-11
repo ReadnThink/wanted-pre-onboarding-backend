@@ -24,8 +24,11 @@ import java.security.SignatureException;
 @Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager) {
+    private final String secretKey;
+
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, String secretKey) {
         super(authenticationManager);
+        this.secretKey = secretKey;
     }
 
     @Override
@@ -33,7 +36,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         if(isHeaderVerify(request,response)){
             try {
                 String token = request.getHeader(JwtVO.HEADER).replace(JwtVO.TOKEN_PREFIX, "");
-                LoginUser loginUser = JwtProcess.verify(token);
+                LoginUser loginUser = JwtProcess.verify(token, secretKey);
 
                 Authentication authentication = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
