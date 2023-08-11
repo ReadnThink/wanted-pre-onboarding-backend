@@ -5,6 +5,7 @@ import com.example.wantedboard.config.jwt.JwtAuthorizationFilter;
 import com.example.wantedboard.domain.UserRole;
 import com.example.wantedboard.util.CustomResponseUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 public class SecurityConfig {
 
+    @Value("${jwt.secret}")
+    private String secretKey;
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -31,8 +35,8 @@ public class SecurityConfig {
         @Override
         public void configure(HttpSecurity builder) throws Exception {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
-            builder.addFilter(new JwtAuthenticationFilter(authenticationManager));
-            builder.addFilter(new JwtAuthorizationFilter(authenticationManager));
+            builder.addFilter(new JwtAuthenticationFilter(authenticationManager, secretKey));
+            builder.addFilter(new JwtAuthorizationFilter(authenticationManager, secretKey));
             super.configure(builder);
         }
     }

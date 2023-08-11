@@ -13,7 +13,7 @@ import java.util.Date;
 @Slf4j
 public class JwtProcess {
 
-    public static String create(LoginUser loginUser){
+    public static String create(LoginUser loginUser, final String secretKey){
 
         String jwtToken = JWT.create()
                 .withSubject("wanted")
@@ -21,14 +21,14 @@ public class JwtProcess {
                 .withClaim("id", loginUser.getUser().getId())
                 .withClaim("email", loginUser.getUser().getEmail())
                 .withClaim("role", loginUser.getUser().getUserRole().name())
-                .sign(Algorithm.HMAC512(JwtVO.SECRET));
+                .sign(Algorithm.HMAC512(secretKey));
 
         return JwtVO.TOKEN_PREFIX+jwtToken;
     }
 
-    public static LoginUser verify(String token){
+    public static LoginUser verify(String token, String secretKey){
 
-        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(JwtVO.SECRET)).build().verify(token);
+        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
         Long id = decodedJWT.getClaim("id").asLong();
         String email = decodedJWT.getClaim("email").asString();
         String role = decodedJWT.getClaim("role").asString();

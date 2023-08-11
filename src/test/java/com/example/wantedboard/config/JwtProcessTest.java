@@ -8,11 +8,12 @@ import com.example.wantedboard.domain.UserRole;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class JwtProcessTest {
+
+    private final String secretKey = "test";
 
     private String createToken(){
         //given
@@ -20,7 +21,7 @@ class JwtProcessTest {
         LoginUser loginUser = new LoginUser(user);
 
         //when
-        String jwtToken = JwtProcess.create(loginUser);
+        String jwtToken = JwtProcess.create(loginUser, secretKey);
         return jwtToken;
     }
 
@@ -43,7 +44,7 @@ class JwtProcessTest {
         final String jwt = bearerKwt.replace(JwtVO.TOKEN_PREFIX, "");
 
         //when
-        final LoginUser loginUser = JwtProcess.verify(jwt);
+        final LoginUser loginUser = JwtProcess.verify(jwt, secretKey);
 
         //then
         assertThat(loginUser.getUser().getId()).isEqualTo(1L);

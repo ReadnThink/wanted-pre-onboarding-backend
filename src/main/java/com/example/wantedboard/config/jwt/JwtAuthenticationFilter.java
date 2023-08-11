@@ -7,6 +7,7 @@ import com.example.wantedboard.response.LoginRespDto;
 import com.example.wantedboard.util.CustomResponseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -25,17 +26,19 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private AuthenticationManager authenticationManager;
-    private ObjectMapper om;
+    private final String secretKey;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, String secretKey) {
         super(authenticationManager);
         setFilterProcessesUrl("/login");
         this.authenticationManager = authenticationManager;
+        this.secretKey = secretKey;
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try{
+            ObjectMapper om = new ObjectMapper();
             LoginRequest loginRequest = om.readValue(request.getInputStream(), LoginRequest.class);
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -58,7 +61,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         LoginUser loginUser = (LoginUser) authResult.getPrincipal();
         User user = loginUser.getUser();
-        String jwtToken = JwtProcess.create(loginUser);
+        String jwtToken = JwtProcess.create(loginUser, secretKey);
         response.addHeader(JwtVO.HEADER, jwtToken);
 
         LoginRespDto loginRespDto = LoginRespDto.builder()
