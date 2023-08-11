@@ -21,7 +21,7 @@
 
 ## AWS 배포
 
-[AWS EC2 배포 주소](http://15.165.44.35:8082/posts)
+[AWS EC2 배포 주소](http://15.165.44.35:8082/posts) <br/>
 [Swagger 주소](http://15.165.44.35:8082/swagger-ui/index.html#/)
 
 ![image](https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/e268b306-fce3-409b-a046-828a0d1050e5)
@@ -46,19 +46,19 @@ Java · Spring Boot · Spring Data JPA · Querydsl · MySQL · Spring Security �
 
 ## 애플리케이션의 실행 방법
 
-1. git clone [김솔배-원티드-과제](https://github.com/ReadnThink/wanted-pre-onboarding-backend.git)
+1. git clone https://github.com/ReadnThink/wanted-pre-onboarding-backend.git
 2. application.yml 파일에 환경변수 입력
   3. mysql의 URL, USERNAME, PASSWORD
   4. jwt.secret에 jwt 생성을 위한 키값 입력
 5. yml에 입력한 mysql에 스키마를 추가
-6. Java IDE를 사용해 애플리케이션을 실행합니다.
+6. Java IDE를 사용해 애플리케이션을 실행
 
 ### 엔드포인트 호출
 
 위 설명대로 진행되었다는 가정하에 시작합니다.
 
-1. 애플리케이션을 실행합니다.
-2. API를 테스트 할 수 있는 플랫폼을 이용해 API를 호출합니다.
+1. 애플리케이션을 실행
+2. API를 테스트 할 수 있는 플랫폼을 이용해 API를 호출
 3. API 명세는 [WIKI페이지](https://github.com/ReadnThink/wanted-pre-onboarding-backend/wiki/API-%EB%AA%85%EC%84%B8(request-response-%ED%8F%AC%ED%95%A8))를 참고해 주세요.
 
 
