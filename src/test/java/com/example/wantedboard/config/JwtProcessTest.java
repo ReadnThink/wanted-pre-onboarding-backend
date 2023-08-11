@@ -1,10 +1,10 @@
 package com.example.wantedboard.config;
 
-import com.example.wantedboard.config.auth.LoginUser;
-import com.example.wantedboard.config.jwt.JwtProcess;
-import com.example.wantedboard.config.jwt.JwtVO;
-import com.example.wantedboard.domain.User;
-import com.example.wantedboard.domain.UserRole;
+import com.example.wantedboard.global.config.auth.LoginUser;
+import com.example.wantedboard.global.config.jwt.JwtProcess;
+import com.example.wantedboard.global.config.jwt.JwtVO;
+import com.example.wantedboard.domain.user.entity.User;
+import com.example.wantedboard.domain.user.UserRole;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
