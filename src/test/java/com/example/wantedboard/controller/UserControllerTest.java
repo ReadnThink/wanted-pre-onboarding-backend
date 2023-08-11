@@ -1,9 +1,9 @@
 package com.example.wantedboard.controller;
 
-import com.example.wantedboard.exception.InvalidEmail;
-import com.example.wantedboard.exception.InvalidPassword;
-import com.example.wantedboard.request.JoinCreate;
-import com.example.wantedboard.service.UserService;
+import com.example.wantedboard.domain.user.exception.InvalidEmail;
+import com.example.wantedboard.domain.user.exception.InvalidPassword;
+import com.example.wantedboard.domain.user.dto.JoinCreate;
+import com.example.wantedboard.domain.user.application.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

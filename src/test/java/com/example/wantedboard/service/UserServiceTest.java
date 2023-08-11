@@ -1,12 +1,13 @@
 package com.example.wantedboard.service;
 
-import com.example.wantedboard.domain.User;
-import com.example.wantedboard.domain.UserRole;
-import com.example.wantedboard.exception.AlreadyExistsEmail;
-import com.example.wantedboard.exception.InvalidEmail;
-import com.example.wantedboard.exception.InvalidPassword;
-import com.example.wantedboard.postrepository.UserRepository;
-import com.example.wantedboard.request.JoinCreate;
+import com.example.wantedboard.domain.user.application.UserService;
+import com.example.wantedboard.domain.user.entity.User;
+import com.example.wantedboard.domain.user.UserRole;
+import com.example.wantedboard.domain.user.exception.AlreadyExistsEmail;
+import com.example.wantedboard.domain.user.exception.InvalidEmail;
+import com.example.wantedboard.domain.user.exception.InvalidPassword;
+import com.example.wantedboard.domain.user.dao.UserRepository;
+import com.example.wantedboard.domain.user.dto.JoinCreate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

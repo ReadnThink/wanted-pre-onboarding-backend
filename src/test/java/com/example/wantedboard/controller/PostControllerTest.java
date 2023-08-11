@@ -1,14 +1,14 @@
 package com.example.wantedboard.controller;
 
-import com.example.wantedboard.domain.User;
-import com.example.wantedboard.domain.UserRole;
-import com.example.wantedboard.exception.CustomApiException;
-import com.example.wantedboard.exception.PostNotFound;
-import com.example.wantedboard.postrepository.UserRepository;
-import com.example.wantedboard.request.PostCreate;
-import com.example.wantedboard.request.PostEdit;
-import com.example.wantedboard.response.PostResponse;
-import com.example.wantedboard.service.PostService;
+import com.example.wantedboard.domain.user.entity.User;
+import com.example.wantedboard.domain.user.UserRole;
+import com.example.wantedboard.global.exception.CustomApiException;
+import com.example.wantedboard.domain.post.exception.PostNotFound;
+import com.example.wantedboard.domain.user.dao.UserRepository;
+import com.example.wantedboard.domain.post.dto.PostCreate;
+import com.example.wantedboard.domain.post.dto.PostEdit;
+import com.example.wantedboard.domain.post.dto.PostResponse;
+import com.example.wantedboard.domain.post.application.PostService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -201,7 +201,7 @@ class PostControllerTest {
                 .content("수정")
                 .build();
         //when
-        mockMvc.perform(post(POST_EDIT.getValue(), 1L)
+        mockMvc.perform(patch(POST_EDIT.getValue(), 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsString(request))
                 )

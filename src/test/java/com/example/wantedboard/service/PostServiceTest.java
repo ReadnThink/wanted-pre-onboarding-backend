@@ -1,15 +1,16 @@
 package com.example.wantedboard.service;
 
-import com.example.wantedboard.domain.Post;
-import com.example.wantedboard.domain.User;
-import com.example.wantedboard.exception.PostNotFound;
-import com.example.wantedboard.exception.UserNotFound;
-import com.example.wantedboard.exception.UserNotMatch;
-import com.example.wantedboard.postrepository.PostRepository;
-import com.example.wantedboard.postrepository.UserRepository;
-import com.example.wantedboard.request.PostCreate;
-import com.example.wantedboard.request.PostSearch;
-import com.example.wantedboard.response.PostResponse;
+import com.example.wantedboard.domain.post.application.PostService;
+import com.example.wantedboard.domain.post.entity.Post;
+import com.example.wantedboard.domain.user.entity.User;
+import com.example.wantedboard.domain.post.exception.PostNotFound;
+import com.example.wantedboard.domain.user.exception.UserNotFound;
+import com.example.wantedboard.domain.user.exception.UserNotMatch;
+import com.example.wantedboard.domain.post.dao.PostRepository;
+import com.example.wantedboard.domain.user.dao.UserRepository;
+import com.example.wantedboard.domain.post.dto.PostCreate;
+import com.example.wantedboard.domain.post.dto.PostSearch;
+import com.example.wantedboard.domain.post.dto.PostResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
 
 @ExtendWith(MockitoExtension.class)
 class PostServiceTest {
