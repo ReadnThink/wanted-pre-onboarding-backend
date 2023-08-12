@@ -32,9 +32,7 @@ public class Post {
         this.user = user;
     }
 
-    public void change(String title, String content, Long userId) {
-        isSameUser(userId);
-
+    public void change(String title, String content) {
         this.title = title != null ? title : this.title;
         this.content = content != null ? content : this.content;
     }
