@@ -59,7 +59,8 @@ public class PostService {
                 .orElseThrow(PostNotFound::new);
 
         validateUserExists(userId);
-        post.change(postEdit.getTitle(), postEdit.getContent(), userId);
+        post.isSameUser(userId);
+        post.change(postEdit.getTitle(), postEdit.getContent());
     }
 
     public void delete(final Long postId, Long userId) {

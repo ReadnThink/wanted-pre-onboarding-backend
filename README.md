@@ -1,30 +1,24 @@
-﻿# wanted-pre-onboarding-backend
-
-# 8월 11일까지 완료하겠습니다.
-
-## 과제 주소
-원티드 : https://www.wanted.co.kr/events/pre_ob_be_6 <br/>
-깃허브 : https://github.com/lordmyshepherd-edu/wanted-pre-onboardung-backend-selection-assignment
-
-
+﻿# 원티드 프리온보딩 백엔드 인턴십 - 선발 과제
 
 ## 목차
-1. [AWS배포](#aws-배포)
-2. [테스트 작성](#테스트)
-3. [지원자 성명](#지원자-성명)
+1. [지원자 성명](#지원자-성명)
+2. [AWS배포](#aws-배포)
+3. [테스트 작성](#테스트)
 4. [애플리케이션의 실행 방법](#애플리케이션의-실행-방법)
 5. [구현한 API의 동작을 촬영한 데모 영상 링크](#구현한-api의-동작을-촬영한-데모-영상-링크)
 6. [구현 방법 및 이유에 대한 간략한 설명](#구현-방법-및-이유에-대한-간략한-설명)
 7. [API 명세](#api-명세)
 
+## 지원자 성명
 
+**김솔배**
 
 ## AWS 배포
 
 [AWS EC2 배포 주소](http://15.165.44.35:8082/posts) <br/>
 [Swagger 주소](http://15.165.44.35:8082/swagger-ui/index.html#/)
 
-![image](https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/e268b306-fce3-409b-a046-828a0d1050e5)
+![개발환경](https://github.com/ReadnThink/wanted-pre-onboarding-backend/assets/103480627/e268b306-fce3-409b-a046-828a0d1050e5)
 
 ### 개발환경
 
@@ -35,17 +29,13 @@ Java · Spring Boot · Spring Data JPA · Querydsl · MySQL · Spring Security �
 **컨트롤러** : @SpringBootTest<br/>
 **서비스** : @ExtendWith
 
-![img_1.png](img_1.png)
+![테스트코드](img_2.png)
 
 테스트코드를 작성하여 아래와같은 장점을 얻었습니다.
 
 1. 코드가 변경되어도 예상치 못한 부작용을 방지
 2. 작성한 코드가 의도한 대로 작동하는지 검증하여 실제 애플리케이션을 띄우지 않고 코드 검증
 3. 배포시 버그를 최소화
-
-
-## 지원자 성명
-김솔배 
 
 ## 애플리케이션의 실행 방법
 

@@ -153,7 +153,7 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("글 1페이지 조회")
+    @DisplayName("글 리스트 조회")
     void test_list() {
         //given
         List<Post> response = IntStream.range(1, 6)
@@ -180,7 +180,7 @@ class PostServiceTest {
     void test_edit() {
 
         //when
-        post.change("제목수정","내용수정", 1L);
+        post.change("제목수정","내용수정");
 
         //then
         assertThat(post.getTitle()).isEqualTo("제목수정");
@@ -191,7 +191,7 @@ class PostServiceTest {
     @DisplayName("글 수정 실패")
     void test_edit1() {
         //when
-        var exception = assertThrows(UserNotMatch.class, () -> post.change("제목수정", "내용수정", 2L));
+        var exception = assertThrows(UserNotMatch.class, () -> post.isSameUser(2L));
 
         //then
         assertEquals(exception.HttpStatusCode(), HttpStatus.FORBIDDEN);

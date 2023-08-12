@@ -1,14 +1,13 @@
 package com.example.wantedboard.controller;
 
-import com.example.wantedboard.domain.user.entity.User;
-import com.example.wantedboard.domain.user.UserRole;
-import com.example.wantedboard.global.exception.CustomApiException;
-import com.example.wantedboard.domain.post.exception.PostNotFound;
-import com.example.wantedboard.domain.user.dao.UserRepository;
+import com.example.wantedboard.domain.post.application.PostService;
 import com.example.wantedboard.domain.post.dto.PostCreate;
 import com.example.wantedboard.domain.post.dto.PostEdit;
 import com.example.wantedboard.domain.post.dto.PostResponse;
-import com.example.wantedboard.domain.post.application.PostService;
+import com.example.wantedboard.domain.post.exception.PostNotFound;
+import com.example.wantedboard.domain.user.UserRole;
+import com.example.wantedboard.domain.user.dao.UserRepository;
+import com.example.wantedboard.domain.user.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,9 +27,11 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.example.wantedboard.config.PostUrl.*;
+import static com.example.wantedboard.global.util.StatusCode.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -74,12 +75,12 @@ class PostControllerTest {
 
         given(postService.write(any(),any())).willReturn(postResponse);
 
-        mockMvc.perform(post(POST_CREATE.getValue())
+        mockMvc.perform(post(POST_CREATE_URL.getValue())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsString(postCreate))
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.code").value(SUCCESS.getValue()))
                 .andExpect(jsonPath("$.message").value("글 작성을 성공했습니다."))
                 .andDo(print())
         ;
@@ -93,12 +94,12 @@ class PostControllerTest {
                 .title("")
                 .content("내용")
                 .build();
-        mockMvc.perform(post(POST_CREATE.getValue())
+        mockMvc.perform(post(POST_CREATE_URL.getValue())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsBytes(postCreate))
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.code").value(SUCCESS.getValue()))
                 .andExpect(jsonPath("$.message").value("글 작성을 성공했습니다."))
                 .andDo(print())
         ;
@@ -112,13 +113,32 @@ class PostControllerTest {
                 .content("내용")
                 .build();
 
-        mockMvc.perform(post(POST_CREATE.getValue())
+        mockMvc.perform(post(POST_CREATE_URL.getValue())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsBytes(postCreate))
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.code").value(SUCCESS.getValue()))
                 .andExpect(jsonPath("$.message").value("글 작성을 성공했습니다."))
+                .andDo(print())
+        ;
+    }
+
+    @Test
+    @DisplayName("글 작성 실패 - 로그인 하지 않음")
+    void 작성4() throws Exception {
+        var postCreate = PostCreate.builder()
+                .title("WithUserDetails 없음")
+                .content("내용")
+                .build();
+
+        mockMvc.perform(post(POST_CREATE_URL.getValue())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsBytes(postCreate))
+                )
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.code").value(BAD_REQUEST.getValue()))
+                .andExpect(jsonPath("$.message").value("로그인을 진행해 주세요"))
                 .andDo(print())
         ;
     }
@@ -128,11 +148,11 @@ class PostControllerTest {
     void 조회성공1() throws Exception {
         Long postId = 1L;
         //when
-        mockMvc.perform(get(POST_GET.getValue(), postId)
+        mockMvc.perform(get(POST_GET_URL.getValue(), postId)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.code").value(SUCCESS.getValue()))
                 .andExpect(jsonPath("$.message").value("글 조회에 성공했습니다."))
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andDo(print())
@@ -146,15 +166,14 @@ class PostControllerTest {
         Long postId = 1L;
 
         //given
-        final CustomApiException customApiException = new PostNotFound();
-        given(postService.get(postId)).willThrow(customApiException);
+        given(postService.get(postId)).willThrow(new PostNotFound());
 
         //when
-        mockMvc.perform(get(POST_GET.getValue(), postId)
+        mockMvc.perform(get(POST_GET_URL.getValue(), postId)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code").value("404"))
+                .andExpect(jsonPath("$.code").value(NOT_FOUND.getValue()))
                 .andExpect(jsonPath("$.message").value("존재하지 않는 글입니다."))
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andDo(print())
@@ -178,11 +197,11 @@ class PostControllerTest {
         given(postService.getList(any())).willReturn(requestPosts);
 
         //when
-        mockMvc.perform(get(POST_LIST.getValue())
+        mockMvc.perform(get(POST_LIST_URL.getValue())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.code").value(SUCCESS.getValue()))
                 .andExpect(jsonPath("$.message").value("글 리스트 조회를 성공했습니다."))
                 .andExpect(jsonPath("$.data").isArray())
                 .andExpect(jsonPath("$.data.size()").value(10))
@@ -201,12 +220,12 @@ class PostControllerTest {
                 .content("수정")
                 .build();
         //when
-        mockMvc.perform(patch(POST_EDIT.getValue(), 1L)
+        mockMvc.perform(patch(POST_EDIT_URL.getValue(), 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsString(request))
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.code").value(SUCCESS.getValue()))
                 .andExpect(jsonPath("$.message").value("글 수정을 성공했습니다."))
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andDo(print())
@@ -215,20 +234,56 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("글 수정 실패 - 로그인하지 않음")
+    void 글_수정1() throws Exception {
+        //given
+        var request = PostEdit.builder()
+                .title("WithUserDetails 없음")
+                .content("수정")
+                .build();
+        //when
+        mockMvc.perform(patch(POST_EDIT_URL.getValue(), 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(request))
+                )
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.code").value(BAD_REQUEST.getValue()))
+                .andExpect(jsonPath("$.message").value("로그인을 진행해 주세요"))
+                .andDo(print())
+        ;
+    }
+
+
+    @Test
     @DisplayName("글 삭제 성공")
     @WithUserDetails(value = "wanted@wanted.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void 글_삭제() throws Exception {
         //when
-        mockMvc.perform(delete(POST_DELETE.getValue(), 1L)
+        mockMvc.perform(delete(POST_DELETE_URL.getValue(), 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.code").value(SUCCESS.getValue()))
                 .andExpect(jsonPath("$.message").value("글 삭제를 성공했습니다."))
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andDo(print())
         ;
         verify(postService).delete(any(), any());
+    }
+
+    @Test
+    @DisplayName("글 삭제 실패 - 로그인하지 않음")
+    void 글_삭제1() throws Exception {
+        //when
+        mockMvc.perform(delete(POST_DELETE_URL.getValue(), 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.code").value(BAD_REQUEST.getValue()))
+                .andExpect(jsonPath("$.message").value("로그인을 진행해 주세요"))
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andDo(print())
+        ;
     }
 
     private void saveMockUser() {

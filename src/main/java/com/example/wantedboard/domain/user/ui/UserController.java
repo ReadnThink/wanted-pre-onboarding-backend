@@ -30,7 +30,7 @@ public class UserController {
             notes = "이메일, 비밀번호를 통해 회원가입을 하는 API"
     )
     @PostMapping("/join")
-    public ResponseEntity<ResponseDto<Object>> join(@RequestBody @Valid JoinCreate joinCreate, BindingResult bindingResult) {
+    public ResponseEntity<ResponseDto<Object>> join(@RequestBody JoinCreate joinCreate) {
         var message = userService.join(joinCreate);
 
         return new ResponseEntity<>( ResponseDto.builder()
@@ -46,6 +46,6 @@ public class UserController {
             notes = "회원가입된 이메일, 비밀번호를 통해 로그인을 하는 API"
     )
     @PostMapping("/login")
-    public void login(@RequestBody @Valid Login login, BindingResult bindingResult) {
+    public void login(@RequestBody Login login) {
     }
 }
